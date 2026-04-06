@@ -2,10 +2,10 @@ package com.github.tareksaeed0;
 
 public class Product {
 	private String name;
-	private float price;
+	private double price;
 	private int quantity;
 
-	public Product(String name, float price, int quantity) {
+	public Product(String name, double price, int quantity) {
 		setName(name);
 		setPrice(price);
 		setQuantity(quantity);
@@ -23,11 +23,11 @@ public class Product {
 		this.name = name;
 	}
 
-	public float getPrice() {
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(double price) {
 		if (price < 0) {
 			throw new IllegalArgumentException("Price can't be negative.");
 		}

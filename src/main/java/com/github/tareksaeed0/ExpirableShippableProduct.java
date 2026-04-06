@@ -7,7 +7,7 @@ public class ExpirableShippableProduct extends Product
 	private LocalDateTime expirationTime;
 	private double weight;
 
-	public ExpirableShippableProduct(String name, float price, int quantity,
+	public ExpirableShippableProduct(String name, double price, int quantity,
 			LocalDateTime expirationTime, double weight) {
 		super(name, price, quantity);
 

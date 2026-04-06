@@ -3,7 +3,7 @@ package com.github.tareksaeed0;
 public class ShippableProduct extends Product implements Shippable {
 	private double weight;
 
-	public ShippableProduct(String name, float price, int quantity,
+	public ShippableProduct(String name, double price, int quantity,
 			double weight) {
 		super(name, price, quantity);
 

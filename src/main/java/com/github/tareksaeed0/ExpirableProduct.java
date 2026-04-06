@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class ExpirableProduct extends Product implements Expirable {
 	private LocalDateTime expirationTime;
 
-	public ExpirableProduct(String name, float price, int quantity,
+	public ExpirableProduct(String name, double price, int quantity,
 			LocalDateTime expirationTime) {
 		super(name, price, quantity);
 
