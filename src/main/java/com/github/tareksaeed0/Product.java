@@ -1,9 +1,15 @@
 package com.github.tareksaeed0;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Product {
 	private String name;
 	private double price;
 	private int quantity;
+	private Map<Class<? extends ProductInformation>, ProductInformation> informations =
+			new HashMap<>();
 
 	public Product(String name, double price, int quantity) {
 		setName(name);
@@ -45,5 +51,30 @@ public class Product {
 		}
 
 		this.quantity = quantity;
+	}
+
+	public <T extends ProductInformation> T getInformation(Class<T> type) {
+		return type.cast(informations.get(type));
+	}
+
+	public <T extends ProductInformation> boolean hasInformation(Class<T> type) {
+		return informations.containsKey(type);
+	}
+
+	public void addInformation(ProductInformation information) {
+		informations.put(information.getClass(), information);
+	}
+
+	public <T extends ProductInformation> void removeInformation(Class<T> type) {
+		informations.remove(type);
+	}
+
+	List<ProductInformation> getInformations() {
+		return informations.values().stream().toList();
+	}
+
+	public <T extends ProductInformation> Product withInformation(T information) {
+		addInformation(information);
+		return this;
 	}
 }

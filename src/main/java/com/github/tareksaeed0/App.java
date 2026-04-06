@@ -1,12 +1,19 @@
 package com.github.tareksaeed0;
 
 import java.time.LocalDateTime;
+import com.github.tareksaeed0.expiration.ExpirationInformation;
+import com.github.tareksaeed0.shipping.ShippingInformation;
 
 public class App {
     public static void main(String[] args) {
-        Product laptop = new ShippableProduct("Laptop", 999.99, 10, 2.5);
-        Product cheese = new ExpirableShippableProduct("Cheese", 5.99, 20,
-                LocalDateTime.now().plusDays(7), 0.5);
+        Product laptop = new Product("Laptop", 999.99, 10)
+                .withInformation(new ShippingInformation(2.5));
+
+        Product cheese = new Product("Cheese", 5.99, 20)
+                .withInformation(new ExpirationInformation(
+                        LocalDateTime.now().plusDays(7)))
+                .withInformation(new ShippingInformation(0.5));
+
         Product scratchCard = new Product("Scratch Card", 1.00, 100);
 
         Customer customer = new Customer("Tarek", 1500);
@@ -20,8 +27,36 @@ public class App {
         cart.add(scratchCard, 2);
 
         for (Cart.Item item : cart) {
-            System.out.println(
-                    item.getQuantity() + "x " + item.getProduct().getName());
+
         }
+
+        for (Cart.Item item : cart) {
+            Product product = item.getProduct();
+            int quantity = item.getQuantity();
+
+            System.out.println(quantity + "x " + product.getName());
+            if (product.hasInformation(ShippingInformation.class)) {
+                ShippingInformation shippingInfo =
+                        product.getInformation(ShippingInformation.class);
+                System.out.println("\tShipping weight of " + product.getName()
+                        + " is " + shippingInfo.getWeight() + " kg");
+            }
+
+            if (product.hasInformation(ExpirationInformation.class)) {
+                ExpirationInformation expirationInfo =
+                        product.getInformation(ExpirationInformation.class);
+                System.out.println("\tExpiration date of " + product.getName()
+                        + " is " + expirationInfo.getExpirationDate());
+            }
+        }
+
+        double totalPackageWeight = cart.stream()
+                .filter(item -> item.getProduct()
+                        .hasInformation(ShippingInformation.class))
+                .mapToDouble(item -> item.getQuantity() * item.getProduct()
+                        .getInformation(ShippingInformation.class).getWeight())
+                .sum();
+        System.out
+                .println("Total package weight " + totalPackageWeight + " kg");
     }
 }

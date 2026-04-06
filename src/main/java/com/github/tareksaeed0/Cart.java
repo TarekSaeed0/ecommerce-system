@@ -2,7 +2,9 @@ package com.github.tareksaeed0;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class Cart implements Iterable<Cart.Item> {
 	public class Item {
@@ -41,6 +43,11 @@ public class Cart implements Iterable<Cart.Item> {
 
 	public boolean isEmpty() {
 		return items.isEmpty();
+	}
+
+	public Stream<Item> stream() {
+		return items.entrySet().stream()
+				.map(entry -> new Item(entry.getKey(), entry.getValue()));
 	}
 
 	@Override
