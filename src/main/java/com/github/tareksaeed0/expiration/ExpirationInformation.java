@@ -1,7 +1,7 @@
 package com.github.tareksaeed0.expiration;
 
 import java.time.LocalDateTime;
-import com.github.tareksaeed0.ProductInformation;
+import com.github.tareksaeed0.product.ProductInformation;
 
 public class ExpirationInformation implements ProductInformation {
   private LocalDateTime expirationDate;

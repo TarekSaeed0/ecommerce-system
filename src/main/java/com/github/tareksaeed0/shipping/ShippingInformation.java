@@ -1,6 +1,6 @@
 package com.github.tareksaeed0.shipping;
 
-import com.github.tareksaeed0.ProductInformation;
+import com.github.tareksaeed0.product.ProductInformation;
 
 public class ShippingInformation implements ProductInformation {
   private double weight;

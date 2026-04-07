@@ -1,30 +1,16 @@
 package com.github.tareksaeed0.shipping;
 
-import com.github.tareksaeed0.Product;
+import com.github.tareksaeed0.product.Product;
+import com.github.tareksaeed0.product.ProductWithInformation;
 
-public class ShippableProduct implements Shippable {
-  private final Product product;
-
+public class ShippableProduct
+    extends ProductWithInformation<ShippingInformation> implements Shippable {
   public ShippableProduct(Product product) {
-    if (!product.hasInformation(ShippingInformation.class)) {
-      throw new IllegalArgumentException(
-          "Product must have shipping information to be shippable");
-    }
-
-    this.product = product;
-  }
-
-  public Product getProduct() {
-    return product;
-  }
-
-  @Override
-  public String getName() {
-    return product.getName();
+    super(product, ShippingInformation.class);
   }
 
   @Override
   public double getWeight() {
-    return product.getInformation(ShippingInformation.class).getWeight();
+    return getInformation(ShippingInformation.class).getWeight();
   }
 }

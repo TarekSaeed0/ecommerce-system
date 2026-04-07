@@ -2,19 +2,21 @@ package com.github.tareksaeed0;
 
 import java.time.LocalDateTime;
 import com.github.tareksaeed0.expiration.ExpirationInformation;
+import com.github.tareksaeed0.product.BasicProduct;
+import com.github.tareksaeed0.product.Product;
 import com.github.tareksaeed0.shipping.ShippingInformation;
 
 public class App {
     public static void main(String[] args) {
-        Product laptop = new Product("Laptop", 999.99, 10)
+        Product laptop = new BasicProduct("Laptop", 999.99, 10)
                 .withInformation(new ShippingInformation(2.5));
 
-        Product cheese = new Product("Cheese", 5.99, 20)
+        Product cheese = new BasicProduct("Cheese", 5.99, 20)
                 .withInformation(new ExpirationInformation(
                         LocalDateTime.now().plusDays(7)))
                 .withInformation(new ShippingInformation(0.5));
 
-        Product scratchCard = new Product("Scratch Card", 1.00, 100);
+        Product scratchCard = new BasicProduct("Scratch Card", 1.00, 100);
 
         Customer customer = new Customer("Tarek", 1500);
 
@@ -25,10 +27,6 @@ public class App {
         cart.add(laptop, 1);
         cart.add(cheese, 3);
         cart.add(scratchCard, 2);
-
-        for (Cart.Item item : cart) {
-
-        }
 
         for (Cart.Item item : cart) {
             Product product = item.getProduct();

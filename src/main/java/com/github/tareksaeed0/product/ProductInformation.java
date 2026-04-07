@@ -1,4 +1,4 @@
-package com.github.tareksaeed0;
+package com.github.tareksaeed0.product;
 
 public interface ProductInformation {
   String getName();

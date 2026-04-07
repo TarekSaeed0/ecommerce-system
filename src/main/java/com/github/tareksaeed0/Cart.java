@@ -2,9 +2,9 @@ package com.github.tareksaeed0;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import com.github.tareksaeed0.product.Product;
 
 public class Cart implements Iterable<Cart.Item> {
 	public class Item {

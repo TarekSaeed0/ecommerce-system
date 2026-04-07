@@ -1,16 +1,20 @@
 package com.github.tareksaeed0;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.HashMap;
 import java.util.Map;
+import com.github.tareksaeed0.product.BasicProduct;
+import com.github.tareksaeed0.product.Product;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
 public class CartTest {
-  Product product1 = new Product("Test Product 1", 10.0, 5);
-  Product product2 = new Product("Test Product 2", 15.0, 3);
-  Product product3 = new Product("Test Product 3", 20.0, 2);
-  Product product4 = new Product("Test Product 4", 25.0, 1);
+  Product product1 = new BasicProduct("Test Product 1", 10.0, 5);
+  Product product2 = new BasicProduct("Test Product 2", 15.0, 3);
+  Product product3 = new BasicProduct("Test Product 3", 20.0, 2);
+  Product product4 = new BasicProduct("Test Product 4", 25.0, 1);
 
   @Test
   public void cantAddProductWithNonPositiveQuantity() {

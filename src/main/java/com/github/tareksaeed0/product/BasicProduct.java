@@ -1,17 +1,17 @@
-package com.github.tareksaeed0;
+package com.github.tareksaeed0.product;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Product {
+public class BasicProduct implements Product {
 	private String name;
 	private double price;
 	private int quantity;
 	private Map<Class<? extends ProductInformation>, ProductInformation> informations =
 			new HashMap<>();
 
-	public Product(String name, double price, int quantity) {
+	public BasicProduct(String name, double price, int quantity) {
 		setName(name);
 		setPrice(price);
 		setQuantity(quantity);
@@ -73,7 +73,8 @@ public class Product {
 		return informations.values().stream().toList();
 	}
 
-	public <T extends ProductInformation> Product withInformation(T information) {
+	public <T extends ProductInformation> BasicProduct withInformation(
+			T information) {
 		addInformation(information);
 		return this;
 	}
