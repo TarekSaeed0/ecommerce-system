@@ -12,8 +12,9 @@ public class SimpleReceiptFormatter implements ReceiptFormatter {
 	}
 
 	String centerPad(String value, int length) {
-		int padding = (length - value.length()) / 2;
-		return " ".repeat(padding) + value + " ".repeat(padding);
+		int leftPadding = (length - value.length()) / 2;
+		int rightPadding = length - value.length() - leftPadding;
+		return " ".repeat(leftPadding) + value + " ".repeat(rightPadding);
 	}
 
 	public String format(Receipt receipt) {
@@ -38,7 +39,7 @@ public class SimpleReceiptFormatter implements ReceiptFormatter {
 		int totalWidth =
 				maximumQuantityLength + 2 + maximumNameLength + 1 + maximumValueLength;
 
-		builder.append("** ").append(centerPad(receipt.getTitle(), totalWidth - 4))
+		builder.append("** ").append(centerPad(receipt.getTitle(), totalWidth - 6))
 				.append(" **\n");
 
 		for (Receipt.Item item : receipt.getItems()) {
