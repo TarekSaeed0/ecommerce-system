@@ -44,8 +44,8 @@ public class CustomerTest {
 	public void cantWithdrawAmountGreaterThanBalance() {
 		Customer customer = new Customer("Tarek", 100);
 
-		assertThrows(IllegalArgumentException.class, () -> customer.withdraw(101));
-		assertThrows(IllegalArgumentException.class, () -> customer.withdraw(1000));
+		assertThrows(InsufficientBalanceException.class, () -> customer.withdraw(101));
+		assertThrows(InsufficientBalanceException.class, () -> customer.withdraw(1000));
 	}
 
 	@Test

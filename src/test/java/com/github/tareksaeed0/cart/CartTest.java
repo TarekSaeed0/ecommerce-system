@@ -44,7 +44,7 @@ public class CartTest {
 		cart.add(product4, 1);
 
 		Map<Product, Integer> items = new HashMap<>();
-		for (Cart.Item item : cart) {
+		for (CartItem item : cart) {
 			items.put(item.getProduct(), item.getQuantity());
 		}
 

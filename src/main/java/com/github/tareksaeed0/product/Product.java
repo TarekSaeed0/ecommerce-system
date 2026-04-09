@@ -7,6 +7,8 @@ public interface Product {
 
   int getQuantity();
 
+  void reduceQuantity(int amount);
+
   public <T extends ProductInformation> T getInformation(Class<T> type);
 
   public <T extends ProductInformation> boolean hasInformation(Class<T> type);

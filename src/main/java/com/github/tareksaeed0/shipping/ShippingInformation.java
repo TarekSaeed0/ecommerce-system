@@ -6,6 +6,10 @@ public class ShippingInformation implements ProductInformation {
   private double weight;
 
   public ShippingInformation(double weight) {
+    if (weight < 0) {
+      throw new IllegalArgumentException("Weight can't be negative");
+    }
+
     this.weight = weight;
   }
 

@@ -1,5 +1,6 @@
 package com.github.tareksaeed0.expiration;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ExpiredProductsException extends RuntimeException {
@@ -13,6 +14,6 @@ public class ExpiredProductsException extends RuntimeException {
 	}
 
 	public List<ExpirableProduct> getExpiredProducts() {
-		return expiredProducts;
+		return Collections.unmodifiableList(expiredProducts);
 	}
 }

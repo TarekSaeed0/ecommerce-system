@@ -1,69 +1,32 @@
 package com.github.tareksaeed0.checkout.receipt;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Receipt {
-	public static class Item {
-		private final String name;
-		private final int quantity;
-		private final Object value;
-
-		public Item(String name, int quantity, Object value) {
-			this.name = name;
-			this.quantity = quantity;
-			this.value = value;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public int getQuantity() {
-			return quantity;
-		}
-
-		public Object getValue() {
-			return value;
-		}
-	}
-
-	public static class Total {
-		private final String name;
-		private final Object value;
-
-		public Total(String name, Object value) {
-			this.name = name;
-			this.value = value;
-		}
-
-		public Object getValue() {
-			return value;
-		}
-
-		public String getName() {
-			return name;
-		}
-	}
-
 	private final String title;
-	private final List<Item> items;
-	private final List<Total> totals;
+	private final List<ReceiptItem> items;
+	private final List<ReceiptTotal> totals;
 
-	public Receipt(String title, List<Item> items, List<Total> totals) {
-		this.title = title;
-		this.items = items;
-		this.totals = totals;
+	public Receipt(String title, List<ReceiptItem> items,
+			List<ReceiptTotal> totals) {
+		this.title = Objects.requireNonNull(title, "Title can't be null.");
+		this.items =
+				List.copyOf(Objects.requireNonNull(items, "Items can't be null."));
+		this.totals =
+				List.copyOf(Objects.requireNonNull(totals, "Totals can't be null."));
 	}
 
 	public String getTitle() {
 		return title;
 	}
 
-	public List<Item> getItems() {
-		return items;
+	public List<ReceiptItem> getItems() {
+		return Collections.unmodifiableList(items);
 	}
 
-	public List<Total> getTotals() {
-		return totals;
+	public List<ReceiptTotal> getTotals() {
+		return Collections.unmodifiableList(totals);
 	}
 }

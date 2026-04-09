@@ -3,6 +3,7 @@ package com.github.tareksaeed0.product;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class BasicProduct implements Product {
 	private String name;
@@ -53,19 +54,42 @@ public class BasicProduct implements Product {
 		this.quantity = quantity;
 	}
 
+	@Override
+	public void reduceQuantity(int amount) {
+		if (amount < 0) {
+			throw new IllegalArgumentException("Amount can't be negative.");
+		}
+
+		if (amount > quantity) {
+			throw new IllegalArgumentException(
+					"Amount can't exceed the available quantity.");
+		}
+
+		quantity -= amount;
+	}
+
+
 	public <T extends ProductInformation> T getInformation(Class<T> type) {
+		Objects.requireNonNull(type, "Information type can't be null.");
+
 		return type.cast(informations.get(type));
 	}
 
 	public <T extends ProductInformation> boolean hasInformation(Class<T> type) {
+		Objects.requireNonNull(type, "Information type can't be null.");
+
 		return informations.containsKey(type);
 	}
 
 	public void addInformation(ProductInformation information) {
+		Objects.requireNonNull(information, "Information can't be null.");
+
 		informations.put(information.getClass(), information);
 	}
 
 	public <T extends ProductInformation> void removeInformation(Class<T> type) {
+		Objects.requireNonNull(type, "Information type can't be null.");
+
 		informations.remove(type);
 	}
 

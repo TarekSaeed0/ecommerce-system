@@ -1,10 +1,13 @@
 package com.github.tareksaeed0.checkout.receipt;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 import com.github.tareksaeed0.utilities.StringUtilities;
 
 public class SimpleReceiptFormatter implements ReceiptFormatter {
 	public String format(Receipt receipt) {
+		Objects.requireNonNull(receipt, "Receipt cannot be null");
+
 		StringBuilder builder = new StringBuilder();
 
 		int maximumQuantityLength = receipt.getItems().stream()
@@ -12,8 +15,8 @@ public class SimpleReceiptFormatter implements ReceiptFormatter {
 				.max(Integer::compareTo).orElse(0);
 
 		int maximumNameLength = Stream
-				.concat(receipt.getItems().stream().map(Receipt.Item::getName),
-						receipt.getTotals().stream().map(Receipt.Total::getName))
+				.concat(receipt.getItems().stream().map(ReceiptItem::getName),
+						receipt.getTotals().stream().map(ReceiptTotal::getName))
 				.map(item -> item.length()).max(Integer::compareTo).orElse(0);
 
 		int maximumValueLength = Stream
@@ -30,7 +33,7 @@ public class SimpleReceiptFormatter implements ReceiptFormatter {
 				.append(StringUtilities.centerPad(receipt.getTitle(), totalWidth - 6))
 				.append(" **\n");
 
-		for (Receipt.Item item : receipt.getItems()) {
+		for (ReceiptItem item : receipt.getItems()) {
 			builder
 					.append(StringUtilities.leftPad(String.valueOf(item.getQuantity()),
 							maximumQuantityLength))
@@ -43,7 +46,7 @@ public class SimpleReceiptFormatter implements ReceiptFormatter {
 
 		builder.append("-".repeat(totalWidth)).append("\n");
 
-		for (Receipt.Total total : receipt.getTotals()) {
+		for (ReceiptTotal total : receipt.getTotals()) {
 			builder
 					.append(StringUtilities.rightPad(total.getName(),
 							maximumQuantityLength + 2 + maximumNameLength))

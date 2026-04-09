@@ -1,15 +1,15 @@
 package com.github.tareksaeed0.checkout;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import com.github.tareksaeed0.cart.Cart;
-import com.github.tareksaeed0.cart.EmptyCartException;
+import com.github.tareksaeed0.cart.CartItem;
+import com.github.tareksaeed0.cart.CartValidator;
+import com.github.tareksaeed0.checkout.receipt.ReceiptItem;
 import com.github.tareksaeed0.checkout.receipt.Receipt;
+import com.github.tareksaeed0.checkout.receipt.ReceiptBuilder;
 import com.github.tareksaeed0.customer.Customer;
-import com.github.tareksaeed0.expiration.ExpirableProduct;
-import com.github.tareksaeed0.expiration.ExpirationInformation;
-import com.github.tareksaeed0.expiration.ExpiredProductsException;
-import com.github.tareksaeed0.product.OutOfStockProductsException;
-import com.github.tareksaeed0.product.Product;
 import com.github.tareksaeed0.shipping.Shippable;
 import com.github.tareksaeed0.shipping.ShippableItem;
 import com.github.tareksaeed0.shipping.ShippableProduct;
@@ -23,36 +23,6 @@ public class SimpleCheckoutService implements CheckoutService {
 
 	public SimpleCheckoutService(ShippingService shippingService) {
 		this.shippingService = shippingService;
-	}
-
-	private List<ExpirableProduct> getExpiredProducts(Cart cart) {
-		return cart.stream()
-				.filter(item -> item.getProduct()
-						.hasInformation(ExpirationInformation.class))
-				.map(item -> new ExpirableProduct(item.getProduct()))
-				.filter(ExpirableProduct::isExpired).toList();
-	}
-
-	private List<Product> getOutOfStockProducts(Cart cart) {
-		return cart.stream()
-				.filter(item -> item.getProduct().getQuantity() < item.getQuantity())
-				.map(Cart.Item::getProduct).toList();
-	}
-
-	private void validateCart(Cart cart) {
-		if (cart.isEmpty()) {
-			throw new EmptyCartException();
-		}
-
-		List<ExpirableProduct> expiredProducts = getExpiredProducts(cart);
-		if (!expiredProducts.isEmpty()) {
-			throw new ExpiredProductsException(expiredProducts);
-		}
-
-		List<Product> outOfStockProducts = getOutOfStockProducts(cart);
-		if (!outOfStockProducts.isEmpty()) {
-			throw new OutOfStockProductsException(outOfStockProducts);
-		}
 	}
 
 	private List<ShippableItem> getShippableItems(Cart cart) {
@@ -77,40 +47,62 @@ public class SimpleCheckoutService implements CheckoutService {
 
 	@Override
 	public List<Receipt> checkout(Customer customer, Cart cart) {
-		validateCart(cart);
+		Objects.requireNonNull(customer, "Customer can't be null.");
+		Objects.requireNonNull(cart, "Cart can't be null.");
+
+		CartValidator.validate(cart);
+
+		List<Receipt> receipts = new ArrayList<>();
 
 		List<ShippableItem> shippableItems = getShippableItems(cart);
 
-		double totalPackageWeight =
-				shippableItems.stream().mapToDouble(Shippable::getWeight).sum();
+		if (!shippableItems.isEmpty()) {
+			double totalPackageWeight =
+					shippableItems.stream().mapToDouble(Shippable::getWeight).sum();
 
-		Receipt shippingReceipt = new Receipt("Shipping Notice",
-				shippableItems.stream()
-						.map(item -> new Receipt.Item(item.getName(), item.getQuantity(),
-								new Weight(item.getWeight())))
-						.toList(),
-				List.of(new Receipt.Total("Total Package Weight",
-						new Weight(totalPackageWeight))));
+			Receipt shippingReceipt = new ReceiptBuilder()
+					.withTitle("Shipping Notice")
+					.withItems(shippableItems.stream()
+							.map(item -> new ReceiptItem(item.getName(), item.getQuantity(),
+									new Weight(item.getWeight())))
+							.toList())
+					.withTotal("Total Package Weight", new Weight(totalPackageWeight))
+					.build();
+
+			receipts.add(shippingReceipt);
+		}
 
 		double subtotal = calculateSubtotal(cart);
-		double shipping = calculateShipping(shippableItems);
-		double amount = subtotal + shipping;
+
+		ReceiptBuilder paymentReceiptBuilder = new ReceiptBuilder()
+				.withTitle("Checkout Receipt")
+				.withItems(cart.stream()
+						.map(item -> new ReceiptItem(item.getProduct().getName(),
+								item.getQuantity(),
+								new Money(item.getProduct().getPrice() * item.getQuantity())))
+						.toList())
+				.withTotal("Subtotal", new Money(subtotal));
+
+		double amount = subtotal;
+
+		if (!shippableItems.isEmpty()) {
+			double shipping = calculateShipping(shippableItems);
+			amount += shipping;
+			paymentReceiptBuilder.withTotal("Shipping", new Money(shipping));
+		}
 
 		customer.withdraw(amount);
 
-		double balance = customer.getBalance();
+		paymentReceiptBuilder.withTotal("Amount", new Money(amount))
+				.withTotal("Balance", new Money(customer.getBalance()));
 
-		Receipt paymentReceipt = new Receipt("Checkout Receipt",
-				cart.stream()
-						.map(item -> new Receipt.Item(item.getProduct().getName(),
-								item.getQuantity(),
-								new Money(item.getProduct().getPrice() * item.getQuantity())))
-						.toList(),
-				List.of(new Receipt.Total("Subtotal", new Money(subtotal)),
-						new Receipt.Total("Shipping", new Money(shipping)),
-						new Receipt.Total("Amount", new Money(amount)),
-						new Receipt.Total("Balance", new Money(balance))));
+		Receipt paymentReceipt = paymentReceiptBuilder.build();
+		receipts.add(paymentReceipt);
 
-		return List.of(shippingReceipt, paymentReceipt);
+		for (CartItem item : cart) {
+			item.getProduct().reduceQuantity(item.getQuantity());
+		}
+
+		return receipts;
 	}
 }
