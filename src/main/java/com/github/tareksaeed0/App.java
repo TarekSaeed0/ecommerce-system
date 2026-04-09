@@ -1,60 +1,60 @@
 package com.github.tareksaeed0;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import com.github.tareksaeed0.cart.Cart;
+import com.github.tareksaeed0.checkout.CheckoutService;
+import com.github.tareksaeed0.checkout.SimpleCheckoutService;
+import com.github.tareksaeed0.checkout.receipt.Receipt;
+import com.github.tareksaeed0.checkout.receipt.ReceiptFormatter;
+import com.github.tareksaeed0.checkout.receipt.SimpleReceiptFormatter;
+import com.github.tareksaeed0.customer.Customer;
 import com.github.tareksaeed0.expiration.ExpirationInformation;
 import com.github.tareksaeed0.product.BasicProduct;
 import com.github.tareksaeed0.product.Product;
 import com.github.tareksaeed0.shipping.ShippingInformation;
+import com.github.tareksaeed0.shipping.ShippingService;
+import com.github.tareksaeed0.shipping.WeightBasedShippingService;
 
 public class App {
-    public static void main(String[] args) {
-        Product laptop = new BasicProduct("Laptop", 999.99, 10)
-                .withInformation(new ShippingInformation(2.5));
+	public static void main(String[] args) {
+		try {
+			Product laptop = new BasicProduct("Laptop", 999.99, 10)
+					.withInformation(new ShippingInformation(2.5));
 
-        Product cheese = new BasicProduct("Cheese", 5.99, 20)
-                .withInformation(new ExpirationInformation(
-                        LocalDateTime.now().plusDays(7)))
-                .withInformation(new ShippingInformation(0.5));
+			Product cheese = new BasicProduct("Cheese", 5.99, 20)
+					.withInformation(
+							new ExpirationInformation(LocalDateTime.now().plusDays(7)))
+					.withInformation(new ShippingInformation(0.5));
 
-        Product scratchCard = new BasicProduct("Scratch Card", 1.00, 100);
+			Product Tomato = new BasicProduct("Tomato", 2.99, 50)
+					.withInformation(
+							new ExpirationInformation(LocalDateTime.now().plusDays(3)))
+					.withInformation(new ShippingInformation(0.2));
 
-        Customer customer = new Customer("Tarek", 1500);
+			Product scratchCard = new BasicProduct("Scratch Card", 1.00, 100);
 
-        System.out.println("Customer: " + customer.getName());
-        System.out.println("Balance: $" + customer.getBalance());
+			ShippingService shippingService = new WeightBasedShippingService(0.5);
+			CheckoutService checkoutService =
+					new SimpleCheckoutService(shippingService);
 
-        Cart cart = new Cart();
-        cart.add(laptop, 1);
-        cart.add(cheese, 3);
-        cart.add(scratchCard, 2);
+			ReceiptFormatter receiptFormatter = new SimpleReceiptFormatter();
 
-        for (Cart.Item item : cart) {
-            Product product = item.getProduct();
-            int quantity = item.getQuantity();
+			Customer customer = new Customer("Tarek", 1500);
 
-            System.out.println(quantity + "x " + product.getName());
-            if (product.hasInformation(ShippingInformation.class)) {
-                ShippingInformation shippingInfo =
-                        product.getInformation(ShippingInformation.class);
-                System.out.println("\tShipping weight of " + product.getName()
-                        + " is " + shippingInfo.getWeight() + " kg");
-            }
+			Cart cart = new Cart();
 
-            if (product.hasInformation(ExpirationInformation.class)) {
-                ExpirationInformation expirationInfo =
-                        product.getInformation(ExpirationInformation.class);
-                System.out.println("\tExpiration date of " + product.getName()
-                        + " is " + expirationInfo.getExpirationDate());
-            }
-        }
+			cart.add(laptop, 1);
+			cart.add(cheese, 1);
+			cart.add(Tomato, 5);
+			cart.add(scratchCard, 2);
 
-        double totalPackageWeight = cart.stream()
-                .filter(item -> item.getProduct()
-                        .hasInformation(ShippingInformation.class))
-                .mapToDouble(item -> item.getQuantity() * item.getProduct()
-                        .getInformation(ShippingInformation.class).getWeight())
-                .sum();
-        System.out
-                .println("Total package weight " + totalPackageWeight + " kg");
-    }
+			List<Receipt> receipts = checkoutService.checkout(customer, cart);
+			for (Receipt receipt : receipts) {
+				System.out.println(receiptFormatter.format(receipt));
+			}
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+	}
 }
