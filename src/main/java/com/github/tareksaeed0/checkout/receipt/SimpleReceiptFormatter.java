@@ -1,22 +1,9 @@
 package com.github.tareksaeed0.checkout.receipt;
 
 import java.util.stream.Stream;
+import com.github.tareksaeed0.utilities.StringUtilities;
 
 public class SimpleReceiptFormatter implements ReceiptFormatter {
-	String leftPad(String value, int length) {
-		return String.format("%" + length + "s", value);
-	}
-
-	String rightPad(String value, int length) {
-		return String.format("%-" + length + "s", value);
-	}
-
-	String centerPad(String value, int length) {
-		int leftPadding = (length - value.length()) / 2;
-		int rightPadding = length - value.length() - leftPadding;
-		return " ".repeat(leftPadding) + value + " ".repeat(rightPadding);
-	}
-
 	public String format(Receipt receipt) {
 		StringBuilder builder = new StringBuilder();
 
@@ -39,16 +26,18 @@ public class SimpleReceiptFormatter implements ReceiptFormatter {
 		int totalWidth =
 				maximumQuantityLength + 2 + maximumNameLength + 1 + maximumValueLength;
 
-		builder.append("** ").append(centerPad(receipt.getTitle(), totalWidth - 6))
+		builder.append("** ")
+				.append(StringUtilities.centerPad(receipt.getTitle(), totalWidth - 6))
 				.append(" **\n");
 
 		for (Receipt.Item item : receipt.getItems()) {
 			builder
-					.append(leftPad(String.valueOf(item.getQuantity()),
+					.append(StringUtilities.leftPad(String.valueOf(item.getQuantity()),
 							maximumQuantityLength))
-					.append("x ").append(rightPad(item.getName(), maximumNameLength))
-					.append(" ")
-					.append(leftPad(item.getValue().toString(), maximumValueLength))
+					.append("x ")
+					.append(StringUtilities.rightPad(item.getName(), maximumNameLength))
+					.append(" ").append(StringUtilities
+							.leftPad(item.getValue().toString(), maximumValueLength))
 					.append("\n");
 		}
 
@@ -56,10 +45,10 @@ public class SimpleReceiptFormatter implements ReceiptFormatter {
 
 		for (Receipt.Total total : receipt.getTotals()) {
 			builder
-					.append(rightPad(total.getName(),
+					.append(StringUtilities.rightPad(total.getName(),
 							maximumQuantityLength + 2 + maximumNameLength))
-					.append(" ")
-					.append(leftPad(total.getValue().toString(), maximumValueLength))
+					.append(" ").append(StringUtilities
+							.leftPad(total.getValue().toString(), maximumValueLength))
 					.append("\n");
 		}
 
