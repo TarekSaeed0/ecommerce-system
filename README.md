@@ -34,6 +34,8 @@
 
   this design is also type safe, as access to the information of a product is by the information type.
 
+  the type-based access for product information was a bit inspired by the std::get function in C++ for accessing elements of a tuple by their type.
+
   adding a new type of product in the future would only require creating a class for the additional information and a wrapper class that implements the corresponding interface, without requiring any changes to the existing code.
 
 - **Assumption:** When a product is added to the cart, the product's available quantity is not reduced, the quantity is only reduced when the customer checks out.
