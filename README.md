@@ -34,7 +34,7 @@
 
   this design is also type safe, as access to the information of a product is by the information type.
 
-  the type-based access for product information was a bit inspired by the std::get function in C++ for accessing elements of a tuple by their type.
+  the type-based access for product information was a bit inspired by the [std::get](https://en.cppreference.com/w/cpp/utility/tuple/get) function in C++ for accessing elements of a tuple by their type.
 
   adding a new type of product in the future would only require creating a class for the additional information and a wrapper class that implements the corresponding interface, without requiring any changes to the existing code.
 
@@ -83,7 +83,7 @@ The classes mentioned here is not an exhaustive list. POJO classes, Exception cl
   - **Receipt Generator Interface:** represents a receipt generator that takes checkout details and generates receipts.
   - **Simple Receipt Generator Class:** an implementation of the Receipt Generator interface that generates a shipping notice receipt (if applicable) and a payment receipt.
   - **Receipt Formatter Interface:** represents a receipt formatter that takes a receipt and returns a formatted string representation of the receipt.
-  - **Receipt Formatter Class:** an implementation of the Receipt Formatter interface that formats a receipt nicely with aligned items and totals.
+  - **Simple Receipt Formatter Class:** an implementation of the Receipt Formatter interface that formats a receipt nicely with aligned items and totals.
 
 ## Example
 
