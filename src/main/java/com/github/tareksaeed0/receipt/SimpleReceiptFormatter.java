@@ -29,8 +29,10 @@ public class SimpleReceiptFormatter implements ReceiptFormatter {
 		int totalWidth =
 				maximumQuantityLength + 2 + maximumNameLength + 1 + maximumValueLength;
 
+		int maximumWidth = Math.max(totalWidth, receipt.getTitle().length() + 6);
+
 		builder.append("** ")
-				.append(StringUtilities.centerPad(receipt.getTitle(), totalWidth - 6))
+				.append(StringUtilities.centerPad(receipt.getTitle(), maximumWidth - 6))
 				.append(" **\n");
 
 		for (ReceiptItem item : receipt.getItems()) {
@@ -39,8 +41,9 @@ public class SimpleReceiptFormatter implements ReceiptFormatter {
 							maximumQuantityLength))
 					.append("x ")
 					.append(StringUtilities.rightPad(item.getName(), maximumNameLength))
-					.append(" ").append(StringUtilities
-							.leftPad(item.getValue().toString(), maximumValueLength))
+					.append(" ".repeat(maximumWidth - totalWidth)).append(" ")
+					.append(StringUtilities.leftPad(item.getValue().toString(),
+							maximumValueLength))
 					.append("\n");
 		}
 
@@ -50,8 +53,9 @@ public class SimpleReceiptFormatter implements ReceiptFormatter {
 			builder
 					.append(StringUtilities.rightPad(total.getName(),
 							maximumQuantityLength + 2 + maximumNameLength))
-					.append(" ").append(StringUtilities
-							.leftPad(total.getValue().toString(), maximumValueLength))
+					.append(" ".repeat(maximumWidth - totalWidth)).append(" ")
+					.append(StringUtilities.leftPad(total.getValue().toString(),
+							maximumValueLength))
 					.append("\n");
 		}
 

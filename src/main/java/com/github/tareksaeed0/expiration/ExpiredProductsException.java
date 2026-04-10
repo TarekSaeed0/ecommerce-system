@@ -10,7 +10,7 @@ public class ExpiredProductsException extends RuntimeException {
 		super("The following products have expired: " + String.join(", ",
 				expiredProducts.stream().map(ExpirableProduct::getName).toList()));
 
-		this.expiredProducts = expiredProducts;
+		this.expiredProducts = List.copyOf(expiredProducts);
 	}
 
 	public List<ExpirableProduct> getExpiredProducts() {

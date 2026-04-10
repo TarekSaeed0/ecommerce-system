@@ -11,8 +11,8 @@ public class ShippingDetails {
 
   public ShippingDetails(List<Shippable> shippables, double totalPackageWeight,
       double shippingCost) {
-    this.shippables =
-        Objects.requireNonNull(shippables, "Shippables can't be null.");
+    this.shippables = List.copyOf(
+        Objects.requireNonNull(shippables, "Shippables can't be null."));
     this.totalPackageWeight = totalPackageWeight;
     this.shippingCost = shippingCost;
   }

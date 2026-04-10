@@ -10,7 +10,7 @@ public class OutOfStockProductsException extends RuntimeException {
 		super("The following products are out of stock: " + String.join(", ",
 				outOfStockProducts.stream().map(Product::getName).toList()));
 
-		this.outOfStockProducts = outOfStockProducts;
+		this.outOfStockProducts = List.copyOf(outOfStockProducts);
 	}
 
 	public List<Product> getOutOfStockProducts() {

@@ -9,6 +9,11 @@ public class CartItem {
 
   public CartItem(Product product, int quantity) {
     this.product = Objects.requireNonNull(product, "Product can't be null.");
+
+    if (quantity <= 0) {
+      throw new IllegalArgumentException("Quantity can't be non-positive.");
+    }
+
     this.quantity = quantity;
   }
 

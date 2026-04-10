@@ -1,6 +1,7 @@
 package com.github.tareksaeed0.shipping;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SimpleShippingService implements ShippingService {
   private final double ratePerKilogram;
@@ -16,9 +17,13 @@ public class SimpleShippingService implements ShippingService {
 
   @Override
   public ShippingDetails ship(List<Shippable> shippables) {
+    Objects.requireNonNull(shippables, "Shippables can't be null.");
+
     double totalPackageWeight =
         shippables.stream().mapToDouble(Shippable::getWeight).sum();
+
     double shippingCost = totalPackageWeight * ratePerKilogram;
+
     return new ShippingDetails(shippables, totalPackageWeight, shippingCost);
   }
 }

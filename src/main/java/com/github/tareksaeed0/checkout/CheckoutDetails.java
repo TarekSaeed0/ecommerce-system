@@ -16,7 +16,8 @@ public class CheckoutDetails {
   public CheckoutDetails(ShippingDetails shippingDetails, List<CartItem> items,
       double subtotal, double paidAmount, double remainingBalance) {
     this.shippingDetails = shippingDetails;
-    this.items = Objects.requireNonNull(items, "Items can't be null.");
+    this.items =
+        List.copyOf(Objects.requireNonNull(items, "Items can't be null."));
     this.subtotal = subtotal;
     this.paidAmount = paidAmount;
     this.remainingBalance = remainingBalance;
