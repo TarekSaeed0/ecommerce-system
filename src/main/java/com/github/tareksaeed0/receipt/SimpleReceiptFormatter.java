@@ -1,0 +1,64 @@
+package com.github.tareksaeed0.receipt;
+
+import java.util.Objects;
+import java.util.stream.Stream;
+import com.github.tareksaeed0.utilities.StringUtilities;
+
+public class SimpleReceiptFormatter implements ReceiptFormatter {
+	public String format(Receipt receipt) {
+		Objects.requireNonNull(receipt, "Receipt cannot be null");
+
+		StringBuilder builder = new StringBuilder();
+
+		int maximumQuantityLength = receipt.getItems().stream()
+				.map(item -> String.valueOf(item.getQuantity()).length())
+				.max(Integer::compareTo).orElse(0);
+
+		int maximumNameLength = Stream
+				.concat(receipt.getItems().stream().map(ReceiptItem::getName),
+						receipt.getTotals().stream().map(ReceiptTotal::getName))
+				.map(item -> item.length()).max(Integer::compareTo).orElse(0);
+
+		int maximumValueLength = Stream
+				.concat(
+						receipt.getItems().stream().map(item -> item.getValue().toString()),
+						receipt.getTotals().stream()
+								.map(total -> total.getValue().toString()))
+				.map(item -> item.length()).max(Integer::compareTo).orElse(0);
+
+		int totalWidth =
+				maximumQuantityLength + 2 + maximumNameLength + 1 + maximumValueLength;
+
+		int maximumWidth = Math.max(totalWidth, receipt.getTitle().length() + 6);
+
+		builder.append("** ")
+				.append(StringUtilities.centerPad(receipt.getTitle(), maximumWidth - 6))
+				.append(" **\n");
+
+		for (ReceiptItem item : receipt.getItems()) {
+			builder
+					.append(StringUtilities.leftPad(String.valueOf(item.getQuantity()),
+							maximumQuantityLength))
+					.append("x ")
+					.append(StringUtilities.rightPad(item.getName(), maximumNameLength))
+					.append(" ".repeat(maximumWidth - totalWidth)).append(" ")
+					.append(StringUtilities.leftPad(item.getValue().toString(),
+							maximumValueLength))
+					.append("\n");
+		}
+
+		builder.append("-".repeat(totalWidth)).append("\n");
+
+		for (ReceiptTotal total : receipt.getTotals()) {
+			builder
+					.append(StringUtilities.rightPad(total.getName(),
+							maximumQuantityLength + 2 + maximumNameLength))
+					.append(" ".repeat(maximumWidth - totalWidth)).append(" ")
+					.append(StringUtilities.leftPad(total.getValue().toString(),
+							maximumValueLength))
+					.append("\n");
+		}
+
+		return builder.toString();
+	}
+}

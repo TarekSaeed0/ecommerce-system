@@ -1,4 +1,4 @@
-package com.github.tareksaeed0;
+package com.github.tareksaeed0.customer;
 
 public class Customer {
 	private String name;
@@ -48,8 +48,7 @@ public class Customer {
 		}
 
 		if (amount > balance) {
-			throw new IllegalArgumentException(
-					"Withdrawn amount can't be greater than the balance.");
+			throw new InsufficientBalanceException(balance, amount);
 		}
 
 		this.balance -= amount;
