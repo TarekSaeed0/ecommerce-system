@@ -85,6 +85,8 @@ The classes mentioned here is not an exhaustive list. POJO classes, Exception cl
 
 ## Example
 
+### Code
+
 ```java
 ShippingService shippingService = new SimpleShippingService(10);
 CheckoutService checkoutService =
@@ -104,7 +106,7 @@ Product cheese = new BasicProduct("Cheese", 5.99, 20)
 Product scratchCard = new BasicProduct("Scratch Card", 1.00, 100);
 
 try {
-  Customer customer = new Customer("Tarek", 1000);
+  Customer customer = new Customer("Tarek", 1500);
 
   Cart cart = new Cart();
 
@@ -121,6 +123,26 @@ try {
 } catch (Exception e) {
   System.out.println("Error: " + e.getMessage());
 }
+```
+
+### Output
+
+```
+**     Shipping Notice     **
+1x Cheese                500g
+1x Laptop               2.5kg
+-----------------------------
+Total Package Weight      3kg
+
+**     Checkout Receipt     **
+2x Scratch Card             $2
+1x Cheese                $5.99
+1x Laptop              $999.99
+------------------------------
+Subtotal             $1,007.98
+Shipping Cost              $30
+Paid Amount          $1,037.98
+Remaining Balance      $462.02
 ```
 
 ## Building
