@@ -20,7 +20,14 @@ import com.github.tareksaeed0.shipping.ShippingService;
 import com.github.tareksaeed0.shipping.SimpleShippingService;
 
 public class App {
-	public static void main(String[] args) {
+	public static void runExample1() {
+		ShippingService shippingService = new SimpleShippingService(10);
+		CheckoutService checkoutService =
+				new SimpleCheckoutService(shippingService);
+
+		ReceiptGenerator receiptGenerator = new SimpleReceiptGenerator();
+		ReceiptFormatter receiptFormatter = new SimpleReceiptFormatter();
+
 		Product laptop = new BasicProduct("Laptop", 999.99, 10)
 				.withInformation(new ShippingInformation(2.5));
 
@@ -29,19 +36,7 @@ public class App {
 						new ExpirationInformation(LocalDateTime.now().plusDays(7)))
 				.withInformation(new ShippingInformation(0.5));
 
-		Product Tomato = new BasicProduct("Tomato", 2.99, 50)
-				.withInformation(
-						new ExpirationInformation(LocalDateTime.now().plusDays(3)))
-				.withInformation(new ShippingInformation(0.2));
-
 		Product scratchCard = new BasicProduct("Scratch Card", 1.00, 100);
-
-		ShippingService shippingService = new SimpleShippingService(10);
-		CheckoutService checkoutService =
-				new SimpleCheckoutService(shippingService);
-
-		ReceiptGenerator receiptGenerator = new SimpleReceiptGenerator();
-		ReceiptFormatter receiptFormatter = new SimpleReceiptFormatter();
 
 		try {
 			Customer customer = new Customer("Tarek", 1500);
@@ -50,7 +45,6 @@ public class App {
 
 			cart.add(laptop, 1);
 			cart.add(cheese, 1);
-			cart.add(Tomato, 5);
 			cart.add(scratchCard, 2);
 
 			CheckoutDetails details = checkoutService.checkout(customer, cart);
@@ -62,5 +56,12 @@ public class App {
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
 		}
+	}
+
+	public static void main(String[] args) {
+		System.out.println("=".repeat(50));
+		System.out.println("Example 1");
+		System.out.println("=".repeat(50));
+		runExample1();
 	}
 }
