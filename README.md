@@ -147,6 +147,8 @@ Paid Amount          $1,037.98
 Remaining Balance      $462.02
 ```
 
+for more examples, refer to the [`com.github.tareksaeed0.examples`](./src/main/java/com/github/tareksaeed0/examples) package.
+
 ## Building
 
 ```sh
