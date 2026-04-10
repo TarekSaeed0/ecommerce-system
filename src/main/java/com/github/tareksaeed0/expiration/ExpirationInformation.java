@@ -13,11 +13,6 @@ public class ExpirationInformation implements ProductInformation {
     this.expirationDate = expirationDate;
   }
 
-  @Override
-  public String getName() {
-    return "Expiration Information";
-  }
-
   public LocalDateTime getExpirationDate() {
     return expirationDate;
   }

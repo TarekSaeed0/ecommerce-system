@@ -14,7 +14,7 @@ public class Cart implements Iterable<CartItem> {
 		Objects.requireNonNull(product, "Product can't be null.");
 
 		if (quantity <= 0) {
-			throw new IllegalArgumentException("Quantity must be positive.");
+			throw new IllegalArgumentException("Quantity can't be non-positive.");
 		}
 
 		int totalQuantity = items.getOrDefault(product, 0) + quantity;
@@ -24,6 +24,29 @@ public class Cart implements Iterable<CartItem> {
 		}
 
 		items.put(product, totalQuantity);
+	}
+
+	public void remove(Product product, int quantity) {
+		Objects.requireNonNull(product, "Product can't be null.");
+
+		if (quantity <= 0) {
+			throw new IllegalArgumentException("Quantity can't be non-positive.");
+		}
+
+		if (items.getOrDefault(product, 0) < quantity) {
+			throw new IllegalArgumentException(
+					"Quantity to remove can't exceed the quantity in the cart.");
+		}
+
+		if (items.get(product) == quantity) {
+			items.remove(product);
+		} else {
+			items.put(product, items.get(product) - quantity);
+		}
+	}
+
+	public void clear() {
+		items.clear();
 	}
 
 	public boolean isEmpty() {

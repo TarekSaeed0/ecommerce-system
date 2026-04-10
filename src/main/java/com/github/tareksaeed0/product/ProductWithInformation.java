@@ -17,6 +17,10 @@ public class ProductWithInformation<T extends ProductInformation>
     }
   }
 
+  public Product getProduct() {
+    return product;
+  }
+
   @Override
   public String getName() {
     return product.getName();

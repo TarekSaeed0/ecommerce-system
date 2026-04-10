@@ -1,4 +1,4 @@
-package com.github.tareksaeed0.checkout.receipt;
+package com.github.tareksaeed0.receipt;
 
 import java.util.Collections;
 import java.util.List;

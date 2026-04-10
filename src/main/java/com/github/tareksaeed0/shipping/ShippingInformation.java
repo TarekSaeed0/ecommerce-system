@@ -13,11 +13,6 @@ public class ShippingInformation implements ProductInformation {
     this.weight = weight;
   }
 
-  @Override
-  public String getName() {
-    return "Shipping Information";
-  }
-
   public double getWeight() {
     return weight;
   }

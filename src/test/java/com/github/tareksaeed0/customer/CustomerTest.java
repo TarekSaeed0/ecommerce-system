@@ -1,7 +1,7 @@
 package com.github.tareksaeed0.customer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +25,14 @@ public class CustomerTest {
 	}
 
 	@Test
+	public void canCreateCustomer() {
+		Customer customer = new Customer("Tarek", 100);
+
+		assertEquals("Tarek", customer.getName());
+		assertEquals(100, customer.getBalance(), 0.0001);
+	}
+
+	@Test
 	public void cantDepositNegativeAmount() {
 		Customer customer = new Customer("Tarek", 100);
 
@@ -44,8 +52,10 @@ public class CustomerTest {
 	public void cantWithdrawAmountGreaterThanBalance() {
 		Customer customer = new Customer("Tarek", 100);
 
-		assertThrows(InsufficientBalanceException.class, () -> customer.withdraw(101));
-		assertThrows(InsufficientBalanceException.class, () -> customer.withdraw(1000));
+		assertThrows(InsufficientBalanceException.class,
+				() -> customer.withdraw(101));
+		assertThrows(InsufficientBalanceException.class,
+				() -> customer.withdraw(1000));
 	}
 
 	@Test
@@ -53,9 +63,9 @@ public class CustomerTest {
 		Customer customer = new Customer("Tarek", 100);
 
 		customer.deposit(50);
-		assertTrue(customer.getBalance() == 150);
+		assertEquals(150, customer.getBalance(), 0.0001);
 
 		customer.withdraw(20);
-		assertTrue(customer.getBalance() == 130);
+		assertEquals(130, customer.getBalance(), 0.0001);
 	}
 }
